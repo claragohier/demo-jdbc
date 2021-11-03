@@ -1,26 +1,28 @@
 package fr.diginamic;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.*;
+import java.util.ResourceBundle;
 
 public class TestConnexionJdbc {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 
-		String database="compta";
-		String url="jdbc:mysql://localhost:3306/" + database;
-		String user="root";
-		String pwd="root";
+		ResourceBundle properties = ResourceBundle.getBundle("database");
+		String url = properties.getString("jdbc.db.url");
+		Class.forName(properties.getString("jdbc.driver"));
+		String user = properties.getString("jdbc.db.login");
+		String pwd = properties.getString("jdbc.db.password");
 		
 		try {
-		    Class.forName("com.mysql.cj.jdbc.Driver");
-		    Connection conn = DriverManager.getConnection(url, user, pwd);
-		    System.out.println("Connexion réussie");
-		} catch (Exception e){
-		    e.printStackTrace();
-		    System.out.println("Connexion échouée");
-		    System.exit(0);
-		}	
+			Connection conn = DriverManager.getConnection(url, user, pwd);
+			conn.createStatement();
+			System.out.println("Connexion établie");
+			conn.close();
+			System.out.println("Connexion fermée !");
+		} catch (Exception e) {
+			System.err.println("Connexion échouée");
+		}
+		
 	}
 	
 }
